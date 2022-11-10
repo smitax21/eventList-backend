@@ -79,6 +79,20 @@ app.put("/:id", async (req, res) => {
   res.send({ message: "Event updated." });
 });
 
+// userName
+app.get("/user", async (req, res) => {
+  res.send(await User.find());
+});
+
+app.post("/user", async (req, res) => {
+  const newUser = req.body;
+  const user = new user(newUser);
+
+  console.log("adding", user, req.body);
+  await user.save();
+  res.send({ message: "New user inserted." });
+});
+
 // starting the server
 app.listen(port, () => {
   console.log(`listening on port ${port}`);
