@@ -26,9 +26,10 @@ app.use(bodyParser.json());
 
 // enabling CORS for all requests
 app.use(
-  cors({
-    origin: "https://eventlist.onrender.com",
-  })
+  cors()
+  //   {
+  //   origin: "https://eventlist.onrender.com",
+  // }
 );
 
 // adding morgan to log HTTP requests
@@ -45,17 +46,21 @@ app.post("/auth", async (req, res) => {
   res.send({ token: "secretString" });
 });
 
-// custom middleware for authorisation
-// app.use((req, res, next) => {
-//   console.log(req.headers);
-//   if (req.headers.authorization === "secretString") {
-//     next();
-//   } else {
-//     res.sendStatus(403);
-//   }
-// });
+app.get("/user", async (req, res) => {
+  res.send(await Event.find());
+});
 
-// defining CRUD operations
+// custom middleware for authorisation
+app.use((req, res, next) => {
+  console.log(req.headers);
+  if (req.headers.authorization === "secretString") {
+    next();
+  } else {
+    res.sendStatus(403);
+  }
+});
+
+// defining CRUD operations for Events
 app.get("/", async (req, res) => {
   res.send(await Event.find());
 });
